@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+
+	<link rel="stylesheet" type="text/css" href="assets/css/custom.css">
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+	<script src="https://code.jquery.com/jquery-3.3.1.js"
+  	integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+  	crossorigin="anonymous"></script>
+
+</head>
+<body class="container-fluid">
+<!-- 
+	<h1>HANGMAN</h1>
+    <h1>The current word is: <span id="game-text"></span></h1>
+    <h1>you just guessed: <span id="user-text"></span></h1>
+    <h1>guessed letters: <span id="guesses-text"></span></h1>
+    <h1>remaining guesses: <span id="num-text"></span></h1>
+	 -->
+	<div class="row" id="bttf">
+		<div class="span">
+			<img src="assets/imgs/BTTF.jpg" alt="BTTF">
+		</div>
+	</div>
+	<div class="row" id="choice">
+		<div class="span">PLEASE CHOOSE A DIFFICULTY
+		</div>
+	</div>
+	<div class="row" id="buttons">
+		<div class="span">
+			<button type="button" class= "btn btn-success" id="easy">Easy</button>
+			<button type="button" class= "btn btn-warning" id="medium">Medium</button>
+			<button type="button" class= "btn btn-danger" id="hard">Hard</button>
+		</div>
+	</div>
+	
+	<div class="row" id="gamespace">
+<!-- 		<div class="col-md-5 col-sm-5 col-lg-5 col-xs-12">
+			<img class="img-thumbnail float-right" alt="hi">
+		</div> -->
+		<div class="col-md-6 col-sm-10 col-lg-6 col-xl-6 col-xs-10 mainbox">
+			<div class="row span">
+			    <h1>you just guessed: <span id="user-text"></span></h1>
+			</div>
+			<div class="row span">
+			    <h1>guessed letters: <span id="guesses-text"></span></h1>
+			</div>
+			<div class="row span">
+			    <h1>remaining guesses: <span id="num-text"></span></h1>	
+		 	</div>
+		 	<div class="row span" id="win-lose"></div>
+		 	<div class="row span" id="letter-blocks"></div>
+		 </div>
+	</div>
+
+	<script type="text/javascript">
+		var userText = document.getElementById("user-text")
+		var guessText = document.getElementById("guesses-text")
+    	var numText = document.getElementById("num-text")
+
+
+		var audioElement = document.createElement('audio');
+    	
+		
+		
+		var hangman = {
+			optionsEasy:["DOC","MARTY","BIFF","MCFLY","ALMANAC"],
+			optionsMedium:["DELOREAN","LIBYANS","LIGHTNING", "MICHAELJFOX"],
+			optionsHard:["PLUTONIUM","TIMEMACHINE","FLUXCAPACITOR","HOVERBOARD","EIGHTYEIGHTMPH"],
+			guesses: 15,
+			win: false,
+			wordLength: 0,
+			word: "",
+			guessed: [],
+			gameOngoing: false,
+			lettersRemaining: 0,
+
+
+
+			// GETTERS
+			getOptions: function(){
+				return	this.options
+			},
+
+			getGuesses: function(){
+				return this.guesses
+			},
+
+			getWin: function(){
+				return this.win
+			},
+
+			getwordLength: function(){
+				return this.wordLength
+			},
+
+			getWord: function(){
+				return this.word
+			},
+
+			getGuessed: function(){
+				return this.guessed
+			},
+
+			// OTHER METHODS
+			startnewGame: function(difficulty){
+				this.guesses = 15
+				this.win = false
+				this.guessed = []
+				this.gameOngoing = true
+				this.getnewWord(difficulty)
+				this.setwordLength()
+				this.lettersRemaining = this.wordLength
+				userText.textContent = ""
+  				guessText.textContent = ""
+				numText.textContent = ""
+			},
+
+			getnewWord: function(difficulty){
+				switch(difficulty){
+					case "easy":
+						this.word = this.optionsEasy[Math.floor(Math.random()*this.optionsEasy.length)]
+						break
+					case "medium":
+						this.word = this.optionsMedium[Math.floor(Math.random()*this.optionsMedium.length)]
+						break
+					case "hard":
+						this.word = this.optionsHard[Math.floor(Math.random()*this.optionsHard.length)]
+						break
+				}
+			},
+
+			setwordLength: function(){
+				this.wordLength = this.word.length
+			},
+
+			letterinWord: function(key){
+				var letter = key
+				var tot = 0
+
+				for(var i = 0; i < this.wordLength; i++){				
+					if(this.word[i] === letter){
+						tot++
+					}
+				}
+
+				this.addtoGuessed(letter)
+				return tot
+			},
+
+			addtoGuessed: function(key){
+				this.guessed.push(key)
+			},
+
+			hasbeenGuessed: function(key){
+				for(var i = 0; i<this.guessed.length; i++){
+					if (this.guessed[i] === key) {
+						return false
+					}
+				}
+				return true
+			},
+
+			popWord: function(key){
+				var re = new RegExp(key,"gi");
+				this.word = this.word.replace(re, "")
+				console.log("got here", this.word)
+			}
+
+		}
+
+		$( "#easy" ).click(function() {
+  			hangman.startnewGame("easy")
+  			makedisplayLetters()
+  			// console.log(totalSpace)
+		});
+
+		$( "#medium" ).click(function() {
+  			hangman.startnewGame("medium")
+  			makedisplayLetters()
+		});		
+
+		$( "#hard" ).click(function() {
+  			hangman.startnewGame("hard")
+  			makedisplayLetters()
+		});		
+
+
+		function makedisplayLetters(){
+			$('#letter-blocks').empty()
+			$('#win-lose').empty()
+			for(var i = 0; i<hangman.getwordLength();i++){
+	  			var letter = $("<div>");
+	        	letter.addClass("letter fridge-color")
+	        	letter.attr("data-letter", hangman.word[i])
+	        	letter.text(hangman.word[i])
+	        	$("#letter-blocks").append(letter)
+	        	letter.css('visibility','hidden')
+	        	// subspace  += 34
+	        }
+
+	        // var rowpad = (totalSpace - subspace)/2
+
+	        // $("#letter-blocks").css('padding-left',''+rowpad+'px')
+		}
+
+		function displayGuessed(keyPress){
+			$('.letter').filter('[data-letter='+keyPress+']').css('visibility','visible')
+		}
+
+		document.onkeyup = function(event) {
+			var keyPress = event.key.toUpperCase()
+
+			if(hangman.gameOngoing === false){
+				alert("you must start a new game to make guesses")
+			}else if(keyPress === "CTRL" || event.keyCode === 13){
+					keyPress = ""
+			}else{
+				if(hangman.hasbeenGuessed(keyPress) && ((event.keyCode >= 65 && event.keyCode <= 90)||(event.keyCode >= 97 && event.keyCode <= 122))){
+					var tot = hangman.letterinWord(keyPress)
+					if( tot > 0){
+						hangman.popWord(keyPress)
+						displayGuessed(keyPress)
+						if(hangman.word === ""){
+							userText.textContent = keyPress
+							guessText.textContent = hangman.getGuessed()
+							numText.textContent = hangman.getGuesses()
+
+							var win = $("<h1>");
+				        	win.text("YOU WON!!!")
+				        	$("#win-lose").append(win)
+
+							audioElement.setAttribute('src', 'Assets/dontneedroads.mp3');
+							audioElement.play()
+							hangman.gameOngoing = false
+						}
+						hangman.guesses--
+					}else{
+						hangman.guesses--
+					}
+				}else{
+					alert("That is not a letter or has already been guessed")
+				}
+
+			}
+
+			if(hangman.gameOngoing === true){
+				userText.textContent = keyPress
+				guessText.textContent = hangman.getGuessed()
+				numText.textContent = hangman.getGuesses()
+			}
+
+			if (hangman.guesses === 0){
+				var lose = $("<h1>");
+	        	lose.text("YOU LOSE!!!")
+	        	$("#win-lose").append(lose)
+	        	audioElement.setAttribute('src', 'Assets/thinkmcfly.mp3');
+	        	audioElement.play()
+				hangman.gameOngoing = false
+			}
+		}
+	</script>
+
+</body>
+</html>

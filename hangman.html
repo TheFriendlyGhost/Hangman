@@ -47,6 +47,9 @@
 		</div> -->
 		<div class="col-md-6 col-sm-10 col-lg-6 col-xl-6 col-xs-10 mainbox">
 			<div class="row span">
+			    <h1>Total Wins: <span id="win-text"></span></h1>
+			</div>
+			<div class="row span">
 			    <h1>you just guessed: <span id="user-text"></span></h1>
 			</div>
 			<div class="row span">
@@ -64,7 +67,9 @@
 		var userText = document.getElementById("user-text")
 		var guessText = document.getElementById("guesses-text")
     	var numText = document.getElementById("num-text")
+    	var winText = document.getElementById("win-text")
 
+    	var wins = 0
 
 		var audioElement = document.createElement('audio');
     	
@@ -229,6 +234,8 @@
 						hangman.popWord(keyPress)
 						displayGuessed(keyPress)
 						if(hangman.word === ""){
+							wins++
+							winText.textContent = wins
 							userText.textContent = keyPress
 							guessText.textContent = hangman.getGuessed()
 							numText.textContent = hangman.getGuesses()
@@ -236,6 +243,7 @@
 							var win = $("<h1>");
 				        	win.text("YOU WON!!!")
 				        	$("#win-lose").append(win)
+
 
 							audioElement.setAttribute('src', 'Assets/dontneedroads.mp3');
 							audioElement.play()

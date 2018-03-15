@@ -125,7 +125,7 @@
 				this.lettersRemaining = this.wordLength
 				userText.textContent = ""
   				guessText.textContent = ""
-				numText.textContent = ""
+				numText.textContent = 15
 			},
 
 			getnewWord: function(difficulty){
@@ -176,7 +176,6 @@
 			popWord: function(key){
 				var re = new RegExp(key,"gi");
 				this.word = this.word.replace(re, "")
-				console.log("got here", this.word)
 			}
 
 		}
@@ -203,11 +202,21 @@
 			$('#win-lose').empty()
 			for(var i = 0; i<hangman.getwordLength();i++){
 	  			var letter = $("<div>");
+	  			var box = $("<div>");
+
 	        	letter.addClass("letter fridge-color")
+	        	box.addClass("fridge-color box")
+
 	        	letter.attr("data-letter", hangman.word[i])
+	        	box.attr("data-letter", hangman.word[i])
+
 	        	letter.text(hangman.word[i])
+
 	        	$("#letter-blocks").append(letter)
-	        	letter.css('visibility','hidden')
+	        	$("#letter-blocks").append(box)
+
+	        	letter.hide()
+	        	box.show()
 	        	// subspace  += 34
 	        }
 
@@ -217,7 +226,8 @@
 		}
 
 		function displayGuessed(keyPress){
-			$('.letter').filter('[data-letter='+keyPress+']').css('visibility','visible')
+			$('.box').filter('[data-letter='+keyPress+']').hide()
+			$('.letter').filter('[data-letter='+keyPress+']').show()
 		}
 
 		document.onkeyup = function(event) {

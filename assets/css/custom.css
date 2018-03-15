@@ -46,7 +46,7 @@ h1{
 	color:white;
 }
 
- .letter {
+ .letter,.box {
 	width: 30px;
 	height: 30px;
 	border-style: solid;

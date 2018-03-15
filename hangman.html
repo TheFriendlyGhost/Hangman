@@ -225,6 +225,7 @@
 
 			if(hangman.gameOngoing === false){
 				alert("you must start a new game to make guesses")
+				return
 			}else if(keyPress === "CTRL" || event.keyCode === 13){
 					keyPress = ""
 			}else{

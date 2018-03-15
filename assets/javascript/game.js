@@ -10,9 +10,9 @@ var audioElement = document.createElement('audio');
 
 
 var hangman = {
-	optionsEasy:["DOC","MARTY","BIFF","MCFLY","ALMANAC"],
-	optionsMedium:["DELOREAN","LIBYANS","LIGHTNING", "MICHAELJFOX"],
-	optionsHard:["PLUTONIUM","TIMEMACHINE","FLUXCAPACITOR","HOVERBOARD","EIGHTYEIGHTMPH"],
+	optionsEasy:["DOC","MARTY","BIFF","MCFLY","ALMANAC","LORRAINE"],
+	optionsMedium:["DELOREAN","LIBYANS","LIGHTNING", "MICHAELJFOX","GREATSCOTT","CLOCKTOWER"],
+	optionsHard:["PLUTONIUM","TIMEMACHINE","FLUXCAPACITOR","HOVERBOARD","EIGHTYEIGHTMPH","NOBODYCALLSMECHICKEN"],
 	guesses: 15,
 	win: false,
 	wordLength: 0,
@@ -58,7 +58,7 @@ var hangman = {
 		this.setwordLength()
 		this.lettersRemaining = this.wordLength
 		userText.textContent = ""
-			guessText.textContent = ""
+		guessText.textContent = ""
 		numText.textContent = 15
 	},
 
